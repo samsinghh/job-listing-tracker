@@ -83,8 +83,6 @@ Notes:
   won't silently skip the day.
 - Change the time by editing `StartCalendarInterval` (`Hour`/`Minute`) in the
   installed plist, then `launchctl unload` + `load -w` to apply.
-- This is a local background job, independent of the git repo — publishing the
-  repo does not affect it.
 
 ## Configuration
 
