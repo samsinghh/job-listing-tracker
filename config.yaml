@@ -1,0 +1,87 @@
+# Configuration for the internship watcher.
+#
+# Adding a new company is a config edit only: pick a `scraper` that already
+# exists (greenhouse / lever / ashby) and supply its parameters. Use the
+# `stub` scraper for sites that need bespoke work (JS rendering, auth, etc.).
+
+# Email notification of NEW listings (sent by `run` when there are new matches).
+# Credentials are NOT stored here — set IW_SMTP_USER and IW_SMTP_PASSWORD in the
+# environment (see README "Automation & email"). For Gmail, IW_SMTP_PASSWORD must
+# be a 16-char App Password, not your account password.
+email:
+  enabled: true                  # set false to disable email
+  to: your-email@example.com     # or set IW_EMAIL_TO in .env.local (takes precedence)
+  # from: defaults to IW_SMTP_USER if omitted
+  smtp_host: smtp.gmail.com
+  smtp_port: 587
+
+keywords:
+  # A listing matches if its title contains ANY `match` keyword and NONE of
+  # the `exclude` keywords. Matching is case-insensitive and word-boundary
+  # aware (so "intern" does not match "internal").
+  match:
+    - internship
+    - intern
+    - software engineer intern
+    - swe intern
+    - machine learning intern
+    - robotics intern
+    - summer 2027
+    - "2027"
+  exclude:
+    - new grad
+    - full-time
+    - senior
+    - staff
+    - manager
+    - sales
+    - marketing
+
+companies:
+  # --- Working: public JSON ATS APIs (verified) ---
+  - name: Anthropic
+    scraper: greenhouse
+    board: anthropic
+
+  - name: Databricks
+    scraper: greenhouse
+    board: databricks
+
+  - name: Stripe
+    scraper: greenhouse
+    board: stripe
+
+  - name: OpenAI
+    scraper: ashby
+    org: openai
+
+  - name: NVIDIA
+    scraper: workday
+    host: nvidia.wd5.myworkdayjobs.com
+    tenant: nvidia
+    site: NVIDIAExternalCareerSite
+    # Server-side prefilter to keep pagination volume sane; the CLI title
+    # keyword filter still applies on top. See scrapers/workday.py.
+    search_text: intern
+
+  # --- Stubbed: fragile sites, see scrapers/company_pages.py ---
+  - name: Google
+    scraper: stub
+    url: https://www.google.com/about/careers/applications/jobs/results/
+    reason: >-
+      Custom JS-rendered careers site behind an undocumented internal API with
+      anti-bot protection. Requires Playwright or reverse-engineering the API.
+
+  - name: Meta
+    scraper: stub
+    url: https://www.metacareers.com/jobs
+    reason: >-
+      Custom JS-rendered (metacareers) site. Listings load via GraphQL calls
+      that require Playwright rendering.
+
+  - name: Jane Street
+    scraper: stub
+    url: https://www.janestreet.com/join-jane-street/open-roles/
+    reason: >-
+      Custom site; roles render client-side. Needs a bespoke scraper or
+      Playwright rendering.
