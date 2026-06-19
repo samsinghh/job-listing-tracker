@@ -1,4 +1,4 @@
-# internship-watcher
+# job listing tracker
 
 Checks internship postings from a list of companies, stores them locally in SQLite, and tells you when new matching roles appear.
 
